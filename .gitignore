@@ -1,6 +1,7 @@
 ###> IDE ###
 .idea
 ###> Docker ###
+vendor/.env
 .docker
 .env.local
 /node_modules
