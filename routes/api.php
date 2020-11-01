@@ -19,9 +19,10 @@ Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login'])
 
 Route::group(['middleware' => ['auth:api']], function() {
     Route::get('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
+    Route::get('/getUser', [App\Http\Controllers\Api\UserController::class, 'getUser']);
+    Route::get('/getTasks', [App\Http\Controllers\Api\UserController::class, 'getTasks']);
 });
 Route::group(['middleware' => ['auth:api','admin']], function() {
-    Route::get('/getUser', [App\Http\Controllers\Api\UserController::class, 'getUser']);
     Route::get('/admin/getOwnedUsers', [App\Http\Controllers\Api\AdminController::class, 'getOwnedUsers']);
     Route::post('/admin/addUser', [App\Http\Controllers\Api\AdminController::class, 'addUser']);
     Route::put('/admin/editUser', [App\Http\Controllers\Api\AdminController::class, 'editUser']);

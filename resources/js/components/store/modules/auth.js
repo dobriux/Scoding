@@ -31,7 +31,7 @@ const actions = {
             commit(AUTH_REQUEST);
             axios({ url: "/api/login", data: user, method: "POST" })
                 .then(resp => {
-                    console.log(resp.data.access_token);
+                    console.log(resp.data);
                     localStorage.setItem("user-token", resp.data.access_token);
                     commit(AUTH_SUCCESS, resp);
                     dispatch(USER_REQUEST);

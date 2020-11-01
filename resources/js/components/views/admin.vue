@@ -169,7 +169,7 @@
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">{{ this.tasks.selectedUser.name }} tasks</h5>
+                                        <h5 class="modal-title">{{ this.userTasksSelectedUser.name }} tasks</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -236,9 +236,9 @@ import { required, sameAs, minLength, email, maxLength } from 'vuelidate/lib/val
 import {mapGetters} from "vuex";
 import {ADMIN_ADD_REQUEST} from "../store/actions/adminAddUser";
 import {ADMIN_USERS_REQUEST} from "../store/actions/adminUsers";
-import {ADMIN_EDIT_REQUEST} from "../store/actions/adminEdit";
-import {ADMIN_DELETE_REQUEST} from "../store/actions/adminDeleteUser";
-import {ADMIN_TASK_REQUEST} from "../store/actions/adminUserTasks";
+import {ADMIN_EDIT_REQUEST, ADMIN_EDIT_SELECT_USER} from "../store/actions/adminEdit";
+import {ADMIN_DELETE_ID, ADMIN_DELETE_REQUEST} from "../store/actions/adminDeleteUser";
+import {ADMIN_TASK_REQUEST, ADMIN_TASK_SELECTED_USER} from "../store/actions/adminUserTasks";
 import {ADMIN_ADD_TASK_REQUEST} from "../store/actions/adminAddTask";
 export default {
     name: "admin",
@@ -254,14 +254,8 @@ export default {
                 name: "",
                 email: "",
                 password: "",
-                selectedUser:"",
-                id:"",
-            },
-            delete:{
-                id:"",
             },
             tasks:{
-                selectedUser:"",
                 task:"",
             }
         };
@@ -307,7 +301,7 @@ export default {
     },
     methods: {
         adminAdd: function() {
-            this.$v.$touch()
+            this.$v.register.$touch()
             if (!this.$v.register.$invalid) {
                 const { name, email, password, password_confirmation } = this.register;
                 this.$store.dispatch(ADMIN_ADD_REQUEST, { name, email, password, password_confirmation }).then(() => {
@@ -323,7 +317,8 @@ export default {
         adminEdit: function() {
             this.$v.$touch()
             if (!this.$v.edit.$invalid) {
-                const {id, name, email, password } = this.edit;
+                const {name, email, password } = this.edit;
+                const id = this.adminEditSelectedUser.id;
                 this.$store.dispatch(ADMIN_EDIT_REQUEST, {id ,name, email, password }).then(() => {
                     this.$v.edit.password.$model = '';
                     this.$v.edit.$reset();
@@ -332,32 +327,32 @@ export default {
             }
         },
         adminDelete: function(id) {
-                this.delete.id = id;
+            this.$store.commit(ADMIN_DELETE_ID, id);
         },
         adminDeleteSubmit: function (){
-            const id = this.delete.id;
+            const id = this.adminDeleteId;
             this.$store.dispatch(ADMIN_DELETE_REQUEST,{id}).then(() =>{
                 this.$store.dispatch(ADMIN_USERS_REQUEST);
             });
         },
         infoEditModal(item) {
-            this.edit.selectedUser = item;
-            this.edit.id = this.edit.selectedUser.id;
-            this.$v.edit.name.$model = this.edit.selectedUser.name;
-            this.$v.edit.email.$model = this.edit.selectedUser.email;
+            this.$store.commit(ADMIN_EDIT_SELECT_USER, item);
+            this.$v.edit.name.$model = this.adminEditSelectedUser.name;
+            this.$v.edit.email.$model = this.adminEditSelectedUser.email;
         },
         tasksModal(item) {
-            this.tasks.selectedUser = item;
-            const id = this.tasks.selectedUser.id;
+            this.$store.commit(ADMIN_TASK_SELECTED_USER, item);
+            const id = this.userTasksSelectedUser.id;
             this.$store.dispatch(ADMIN_TASK_REQUEST, {id});
         },
         addTask(){
-            this.$v.$touch()
+            this.$v.tasks.$touch()
             if (!this.$v.tasks.$invalid) {
-                const id  = this.tasks.selectedUser.id;
+                const id  = this.userTasksSelectedUser.id;
                 const {task} = this.tasks;
                 this.$store.dispatch(ADMIN_ADD_TASK_REQUEST,{id, task}).then(() =>{
                     this.$store.dispatch(ADMIN_TASK_REQUEST, {id});
+                    this.$v.$reset();
                 });
 
             }
@@ -378,7 +373,10 @@ export default {
             "adminEditErrorResponseMessage",
             "getUserTasks",
             "adminAddTaskResponse",
-            "adminAddTaskErrorResponse"
+            "adminAddTaskErrorResponse",
+            "adminEditSelectedUser",
+            "adminDeleteId",
+            "userTasksSelectedUser"
         ]),
     }
 }

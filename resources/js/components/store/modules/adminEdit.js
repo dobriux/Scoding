@@ -2,17 +2,20 @@ import {
     ADMIN_EDIT_REQUEST,
     ADMIN_EDIT_ERROR,
     ADMIN_EDIT_SUCCESS,
+    ADMIN_EDIT_SELECT_USER
 } from "../actions/adminEdit";
 import axios from "axios";
 
 const state = {
     adminEditResponseMessage:'',
     adminEditErrorResponseMessage:'',
+    selectedUser:'',
 };
 
 const getters = {
     adminEditResponseMessage: state => state.adminEditResponseMessage,
     adminEditErrorResponseMessage: state => state.adminEditErrorResponseMessage,
+    adminEditSelectedUser: state => state.selectedUser,
 };
 
 const actions = {
@@ -47,6 +50,9 @@ const mutations = {
     [ADMIN_EDIT_ERROR]: (state, err) => {
         state.adminEditErrorResponseMessage = err.response.data.message;
         state.adminEditResponseMessage = '';
+    },
+    [ADMIN_EDIT_SELECT_USER]: (state, user) => {
+        state.selectedUser = user;
     }
 };
 

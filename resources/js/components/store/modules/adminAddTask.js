@@ -47,7 +47,7 @@ const mutations = {
     [ADMIN_ADD_TASK_ERROR]: (state, err) => {
         state.response = '';
         state.errorResponse = err.response.data.message;
-    }
+    },
 };
 
 export default {

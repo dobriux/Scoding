@@ -2,15 +2,18 @@ import {
     ADMIN_TASK_REQUEST,
     ADMIN_TASK_ERROR,
     ADMIN_TASK_SUCCESS,
+    ADMIN_TASK_SELECTED_USER
 } from "../actions/adminUserTasks";
 import axios from "axios";
 
 const state = {
     tasks:'',
+    selectedUser:'',
 };
 
 const getters = {
     getUserTasks: state => state.tasks,
+    userTasksSelectedUser: state => state.selectedUser,
 };
 
 const actions = {
@@ -42,6 +45,9 @@ const mutations = {
     },
     [ADMIN_TASK_ERROR]: (state) => {
         state.tasks = '';
+    },
+    [ADMIN_TASK_SELECTED_USER]: (state, user) => {
+        state.selectedUser = user;
     }
 };
 

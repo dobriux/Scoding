@@ -27,7 +27,7 @@ const actions = {
                 .catch(err => {
                     console.log(err.response)
                     commit(ADMIN_USERS_ERROR, err);
-                    dispatch(AUTH_LOGOUT);
+                    //dispatch(AUTH_LOGOUT);
                     reject(err);
                 });
         });

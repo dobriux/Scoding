@@ -2291,15 +2291,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       edit: {
         name: "",
         email: "",
-        password: "",
-        selectedUser: "",
-        id: ""
-      },
-      "delete": {
-        id: ""
+        password: ""
       },
       tasks: {
-        selectedUser: "",
         task: ""
       }
     };
@@ -2347,7 +2341,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     adminAdd: function adminAdd() {
       var _this = this;
 
-      this.$v.$touch();
+      this.$v.register.$touch();
 
       if (!this.$v.register.$invalid) {
         var _this$register = this.register,
@@ -2379,10 +2373,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (!this.$v.edit.$invalid) {
         var _this$edit = this.edit,
-            id = _this$edit.id,
             name = _this$edit.name,
             _email2 = _this$edit.email,
             password = _this$edit.password;
+        var id = this.adminEditSelectedUser.id;
         this.$store.dispatch(_store_actions_adminEdit__WEBPACK_IMPORTED_MODULE_4__["ADMIN_EDIT_REQUEST"], {
           id: id,
           name: name,
@@ -2398,12 +2392,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     },
     adminDelete: function adminDelete(id) {
-      this["delete"].id = id;
+      this.$store.commit(_store_actions_adminDeleteUser__WEBPACK_IMPORTED_MODULE_5__["ADMIN_DELETE_ID"], id);
     },
     adminDeleteSubmit: function adminDeleteSubmit() {
       var _this3 = this;
 
-      var id = this["delete"].id;
+      var id = this.adminDeleteId;
       this.$store.dispatch(_store_actions_adminDeleteUser__WEBPACK_IMPORTED_MODULE_5__["ADMIN_DELETE_REQUEST"], {
         id: id
       }).then(function () {
@@ -2411,14 +2405,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     infoEditModal: function infoEditModal(item) {
-      this.edit.selectedUser = item;
-      this.edit.id = this.edit.selectedUser.id;
-      this.$v.edit.name.$model = this.edit.selectedUser.name;
-      this.$v.edit.email.$model = this.edit.selectedUser.email;
+      this.$store.commit(_store_actions_adminEdit__WEBPACK_IMPORTED_MODULE_4__["ADMIN_EDIT_SELECT_USER"], item);
+      this.$v.edit.name.$model = this.adminEditSelectedUser.name;
+      this.$v.edit.email.$model = this.adminEditSelectedUser.email;
     },
     tasksModal: function tasksModal(item) {
-      this.tasks.selectedUser = item;
-      var id = this.tasks.selectedUser.id;
+      this.$store.commit(_store_actions_adminUserTasks__WEBPACK_IMPORTED_MODULE_6__["ADMIN_TASK_SELECTED_USER"], item);
+      var id = this.userTasksSelectedUser.id;
       this.$store.dispatch(_store_actions_adminUserTasks__WEBPACK_IMPORTED_MODULE_6__["ADMIN_TASK_REQUEST"], {
         id: id
       });
@@ -2426,10 +2419,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     addTask: function addTask() {
       var _this4 = this;
 
-      this.$v.$touch();
+      this.$v.tasks.$touch();
 
       if (!this.$v.tasks.$invalid) {
-        var id = this.tasks.selectedUser.id;
+        var id = this.userTasksSelectedUser.id;
         var task = this.tasks.task;
         this.$store.dispatch(_store_actions_adminAddTask__WEBPACK_IMPORTED_MODULE_7__["ADMIN_ADD_TASK_REQUEST"], {
           id: id,
@@ -2438,6 +2431,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this4.$store.dispatch(_store_actions_adminUserTasks__WEBPACK_IMPORTED_MODULE_6__["ADMIN_TASK_REQUEST"], {
             id: id
           });
+
+          _this4.$v.$reset();
         });
       }
     }
@@ -2445,7 +2440,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   created: function created() {
     this.$store.dispatch(_store_actions_adminUsers__WEBPACK_IMPORTED_MODULE_3__["ADMIN_USERS_REQUEST"]);
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(["adminAddResponseMessage", "adminAddHasErrors", "adminAddErrorResponseMessage", "getProfile", "adminUsersResponseMessage", "adminEditResponseMessage", "adminEditErrorResponseMessage", "getUserTasks", "adminAddTaskResponse", "adminAddTaskErrorResponse"]))
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(["adminAddResponseMessage", "adminAddHasErrors", "adminAddErrorResponseMessage", "getProfile", "adminUsersResponseMessage", "adminEditResponseMessage", "adminEditErrorResponseMessage", "getUserTasks", "adminAddTaskResponse", "adminAddTaskErrorResponse", "adminEditSelectedUser", "adminDeleteId", "userTasksSelectedUser"]))
 });
 
 /***/ }),
@@ -2459,6 +2454,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _store_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/actions/userGetTasks */ "./resources/js/components/store/actions/userGetTasks.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2474,8 +2477,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Home"
+  name: "Home",
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["getProfile", "getTasks"])),
+  created: function created() {
+    this.$store.dispatch(_store_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_1__["USER_TASK_REQUEST"]);
+  },
+  methods: {
+    sortBy: function sortBy(sortKey) {
+      this.$store.commit(_store_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_1__["USER_TASK_SORT_DATE"], sortKey);
+    }
+  }
 });
 
 /***/ }),
@@ -2596,6 +2625,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           email: _email,
           password: password
         }).then(function () {
+          console.log(_this.$store.getters.isAdmin);
+
           if (_this.$store.getters.isAdmin) {
             _this.$router.push('/admin');
           } else {
@@ -61229,7 +61260,9 @@ var render = function() {
                   _c("div", { staticClass: "modal-content" }, [
                     _c("div", { staticClass: "modal-header" }, [
                       _c("h5", { staticClass: "modal-title" }, [
-                        _vm._v(_vm._s(this.tasks.selectedUser.name) + " tasks")
+                        _vm._v(
+                          _vm._s(this.userTasksSelectedUser.name) + " tasks"
+                        )
                       ]),
                       _vm._v(" "),
                       _vm._m(6)
@@ -61607,26 +61640,78 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container mt-5" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Home")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" })
+  return _c("div", { staticClass: "container mt-5" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("b", [_vm._v("Logged in as:")]),
+            _vm._v(" " + _vm._s(_vm.getProfile.name))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("table", { staticClass: "table" }, [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", { attrs: { scope: "col" } }, [_vm._v("Task")]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            return _vm.sortBy("status")
+                          }
+                        }
+                      },
+                      [_vm._v("Status")]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { attrs: { scope: "col" } }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            return _vm.sortBy("created_at")
+                          }
+                        }
+                      },
+                      [_vm._v("Date")]
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.getTasks, function(item) {
+                  return _c("tr", { key: item.created_at }, [
+                    _c("td", [_vm._v(_vm._s(item.task))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.status))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        _vm._s(_vm.moment(item.created_at).format("YYYY-MM-DD"))
+                      )
+                    ])
+                  ])
+                }),
+                0
+              )
+            ])
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -81066,7 +81151,7 @@ var ADMIN_ADD_ERROR = "ADMIN_ADD_ERROR";
 /*!******************************************************************!*\
   !*** ./resources/js/components/store/actions/adminDeleteUser.js ***!
   \******************************************************************/
-/*! exports provided: ADMIN_DELETE_REQUEST, ADMIN_DELETE_SUCCESS, ADMIN_DELETE_ERROR */
+/*! exports provided: ADMIN_DELETE_REQUEST, ADMIN_DELETE_SUCCESS, ADMIN_DELETE_ERROR, ADMIN_DELETE_ID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81074,9 +81159,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_DELETE_REQUEST", function() { return ADMIN_DELETE_REQUEST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_DELETE_SUCCESS", function() { return ADMIN_DELETE_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_DELETE_ERROR", function() { return ADMIN_DELETE_ERROR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_DELETE_ID", function() { return ADMIN_DELETE_ID; });
 var ADMIN_DELETE_REQUEST = "ADMIN_DELETE_REQUEST";
 var ADMIN_DELETE_SUCCESS = "ADMIN_DELETE_SUCCESS";
 var ADMIN_DELETE_ERROR = "ADMIN_DELETE_ERROR";
+var ADMIN_DELETE_ID = "ADMIN_DELETE_ID";
 
 /***/ }),
 
@@ -81084,7 +81171,7 @@ var ADMIN_DELETE_ERROR = "ADMIN_DELETE_ERROR";
 /*!************************************************************!*\
   !*** ./resources/js/components/store/actions/adminEdit.js ***!
   \************************************************************/
-/*! exports provided: ADMIN_EDIT_REQUEST, ADMIN_EDIT_SUCCESS, ADMIN_EDIT_ERROR */
+/*! exports provided: ADMIN_EDIT_REQUEST, ADMIN_EDIT_SUCCESS, ADMIN_EDIT_ERROR, ADMIN_EDIT_SELECT_USER */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81092,9 +81179,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_EDIT_REQUEST", function() { return ADMIN_EDIT_REQUEST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_EDIT_SUCCESS", function() { return ADMIN_EDIT_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_EDIT_ERROR", function() { return ADMIN_EDIT_ERROR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_EDIT_SELECT_USER", function() { return ADMIN_EDIT_SELECT_USER; });
 var ADMIN_EDIT_REQUEST = "ADMIN_EDIT_REQUEST";
 var ADMIN_EDIT_SUCCESS = "ADMIN_EDIT_SUCCESS";
 var ADMIN_EDIT_ERROR = "ADMIN_EDIT_ERROR";
+var ADMIN_EDIT_SELECT_USER = "ADMIN_EDIT_SELECT_USER";
 
 /***/ }),
 
@@ -81102,7 +81191,7 @@ var ADMIN_EDIT_ERROR = "ADMIN_EDIT_ERROR";
 /*!*****************************************************************!*\
   !*** ./resources/js/components/store/actions/adminUserTasks.js ***!
   \*****************************************************************/
-/*! exports provided: ADMIN_TASK_REQUEST, ADMIN_TASK_SUCCESS, ADMIN_TASK_ERROR */
+/*! exports provided: ADMIN_TASK_REQUEST, ADMIN_TASK_SUCCESS, ADMIN_TASK_ERROR, ADMIN_TASK_SELECTED_USER */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81110,9 +81199,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_TASK_REQUEST", function() { return ADMIN_TASK_REQUEST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_TASK_SUCCESS", function() { return ADMIN_TASK_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_TASK_ERROR", function() { return ADMIN_TASK_ERROR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADMIN_TASK_SELECTED_USER", function() { return ADMIN_TASK_SELECTED_USER; });
 var ADMIN_TASK_REQUEST = "ADMIN_TASK_REQUEST";
 var ADMIN_TASK_SUCCESS = "ADMIN_TASK_SUCCESS";
 var ADMIN_TASK_ERROR = "ADMIN_TASK_ERROR";
+var ADMIN_TASK_SELECTED_USER = "ADMIN_TASK_SELECTED_USER";
 
 /***/ }),
 
@@ -81190,6 +81281,26 @@ var USER_ERROR = "USER_ERROR";
 
 /***/ }),
 
+/***/ "./resources/js/components/store/actions/userGetTasks.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/store/actions/userGetTasks.js ***!
+  \***************************************************************/
+/*! exports provided: USER_TASK_REQUEST, USER_TASK_SUCCESS, USER_TASK_ERROR, USER_TASK_SORT_DATE */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_TASK_REQUEST", function() { return USER_TASK_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_TASK_SUCCESS", function() { return USER_TASK_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_TASK_ERROR", function() { return USER_TASK_ERROR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_TASK_SORT_DATE", function() { return USER_TASK_SORT_DATE; });
+var USER_TASK_REQUEST = "USER_TASK_REQUEST";
+var USER_TASK_SUCCESS = "USER_TASK_SUCCESS";
+var USER_TASK_ERROR = "USER_TASK_ERROR";
+var USER_TASK_SORT_DATE = "USER_TASK_SORT_DATE";
+
+/***/ }),
+
 /***/ "./resources/js/components/store/index.js":
 /*!************************************************!*\
   !*** ./resources/js/components/store/index.js ***!
@@ -81211,9 +81322,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_adminEdit__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/adminEdit */ "./resources/js/components/store/modules/adminEdit.js");
 /* harmony import */ var _modules_adminUserTasks__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/adminUserTasks */ "./resources/js/components/store/modules/adminUserTasks.js");
 /* harmony import */ var _modules_adminAddTask__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/adminAddTask */ "./resources/js/components/store/modules/adminAddTask.js");
-/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");
-/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var vuex_persistedstate__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vuex-persistedstate */ "./node_modules/vuex-persistedstate/dist/vuex-persistedstate.es.js");
+/* harmony import */ var _modules_userGetTasks__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/userGetTasks */ "./resources/js/components/store/modules/userGetTasks.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_12__);
+/* harmony import */ var vuex_persistedstate__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vuex-persistedstate */ "./node_modules/vuex-persistedstate/dist/vuex-persistedstate.es.js");
+
 
 
 
@@ -81240,22 +81353,23 @@ var debug = "development" !== "production";
     adminEdit: _modules_adminEdit__WEBPACK_IMPORTED_MODULE_8__["default"],
     adminDeleteUser: _modules_adminDeleteUser__WEBPACK_IMPORTED_MODULE_6__["default"],
     adminUserTasks: _modules_adminUserTasks__WEBPACK_IMPORTED_MODULE_9__["default"],
-    adminAddTask: _modules_adminAddTask__WEBPACK_IMPORTED_MODULE_10__["default"]
+    adminAddTask: _modules_adminAddTask__WEBPACK_IMPORTED_MODULE_10__["default"],
+    userGetTasks: _modules_userGetTasks__WEBPACK_IMPORTED_MODULE_11__["default"]
   },
-  plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_12__["default"])({
+  plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_13__["default"])({
     paths: ['auth.isAdmin', 'user.profile'],
     storage: {
       getItem: function getItem(key) {
-        return js_cookie__WEBPACK_IMPORTED_MODULE_11__["get"](key);
+        return js_cookie__WEBPACK_IMPORTED_MODULE_12__["get"](key);
       },
       setItem: function setItem(key, value) {
-        return js_cookie__WEBPACK_IMPORTED_MODULE_11__["set"](key, value, {
+        return js_cookie__WEBPACK_IMPORTED_MODULE_12__["set"](key, value, {
           expires: 3,
           secure: false
         });
       },
       removeItem: function removeItem(key) {
-        return js_cookie__WEBPACK_IMPORTED_MODULE_11__["remove"](key);
+        return js_cookie__WEBPACK_IMPORTED_MODULE_12__["remove"](key);
       }
     }
   })],
@@ -81433,7 +81547,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var state = {
   admindDeleteResponseMessage: '',
-  adminDeleteErrorResponseMessage: ''
+  adminDeleteErrorResponseMessage: '',
+  id: ''
 };
 var getters = {
   admindDeleteResponseMessage: function admindDeleteResponseMessage(state) {
@@ -81441,6 +81556,9 @@ var getters = {
   },
   adminDeleteErrorResponseMessage: function adminDeleteErrorResponseMessage(state) {
     return state.adminDeleteErrorResponseMessage;
+  },
+  adminDeleteId: function adminDeleteId(state) {
+    return state.id;
   }
 };
 
@@ -81475,6 +81593,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_adminDele
 }), _defineProperty(_mutations, _actions_adminDeleteUser__WEBPACK_IMPORTED_MODULE_0__["ADMIN_DELETE_ERROR"], function (state, err) {
   state.adminDeleteErrorResponseMessage = err.response.data.message;
   state.admindDeleteResponseMessage = '';
+}), _defineProperty(_mutations, _actions_adminDeleteUser__WEBPACK_IMPORTED_MODULE_0__["ADMIN_DELETE_ID"], function (state, id) {
+  state.id = id;
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: state,
@@ -81505,7 +81625,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var state = {
   adminEditResponseMessage: '',
-  adminEditErrorResponseMessage: ''
+  adminEditErrorResponseMessage: '',
+  selectedUser: ''
 };
 var getters = {
   adminEditResponseMessage: function adminEditResponseMessage(state) {
@@ -81513,6 +81634,9 @@ var getters = {
   },
   adminEditErrorResponseMessage: function adminEditErrorResponseMessage(state) {
     return state.adminEditErrorResponseMessage;
+  },
+  adminEditSelectedUser: function adminEditSelectedUser(state) {
+    return state.selectedUser;
   }
 };
 
@@ -81547,6 +81671,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_adminEdit
 }), _defineProperty(_mutations, _actions_adminEdit__WEBPACK_IMPORTED_MODULE_0__["ADMIN_EDIT_ERROR"], function (state, err) {
   state.adminEditErrorResponseMessage = err.response.data.message;
   state.adminEditResponseMessage = '';
+}), _defineProperty(_mutations, _actions_adminEdit__WEBPACK_IMPORTED_MODULE_0__["ADMIN_EDIT_SELECT_USER"], function (state, user) {
+  state.selectedUser = user;
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: state,
@@ -81576,11 +81702,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var state = {
-  tasks: ''
+  tasks: '',
+  selectedUser: ''
 };
 var getters = {
   getUserTasks: function getUserTasks(state) {
     return state.tasks;
+  },
+  userTasksSelectedUser: function userTasksSelectedUser(state) {
+    return state.selectedUser;
   }
 };
 
@@ -81612,6 +81742,8 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_adminUser
   state.tasks = resp.data.message;
 }), _defineProperty(_mutations, _actions_adminUserTasks__WEBPACK_IMPORTED_MODULE_0__["ADMIN_TASK_ERROR"], function (state) {
   state.tasks = '';
+}), _defineProperty(_mutations, _actions_adminUserTasks__WEBPACK_IMPORTED_MODULE_0__["ADMIN_TASK_SELECTED_USER"], function (state, user) {
+  state.selectedUser = user;
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: state,
@@ -81664,8 +81796,8 @@ var actions = _defineProperty({}, _actions_adminUsers__WEBPACK_IMPORTED_MODULE_0
       resolve(resp);
     })["catch"](function (err) {
       console.log(err.response);
-      commit(_actions_adminUsers__WEBPACK_IMPORTED_MODULE_0__["ADMIN_USERS_ERROR"], err);
-      dispatch(_actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_LOGOUT"]);
+      commit(_actions_adminUsers__WEBPACK_IMPORTED_MODULE_0__["ADMIN_USERS_ERROR"], err); //dispatch(AUTH_LOGOUT);
+
       reject(err);
     });
   });
@@ -81738,7 +81870,7 @@ var actions = (_actions = {}, _defineProperty(_actions, _actions_auth__WEBPACK_I
       data: user,
       method: "POST"
     }).then(function (resp) {
-      console.log(resp.data.access_token);
+      console.log(resp.data);
       localStorage.setItem("user-token", resp.data.access_token);
       commit(_actions_auth__WEBPACK_IMPORTED_MODULE_0__["AUTH_SUCCESS"], resp);
       dispatch(_actions_user__WEBPACK_IMPORTED_MODULE_1__["USER_REQUEST"]);
@@ -81915,6 +82047,81 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_user__WEB
   state.status = "error";
 }), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_LOGOUT"], function (state) {
   state.profile = {};
+}), _mutations);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/components/store/modules/userGetTasks.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/components/store/modules/userGetTasks.js ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/userGetTasks */ "./resources/js/components/store/actions/userGetTasks.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+var state = {
+  tasks: '',
+  lastOrder: 'asc'
+};
+var getters = {
+  getTasks: function getTasks(state) {
+    return state.tasks;
+  }
+};
+
+var actions = _defineProperty({}, _actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_REQUEST"], function (_ref) {
+  var commit = _ref.commit,
+      dispatch = _ref.dispatch;
+  return new Promise(function (resolve, reject) {
+    commit(_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_REQUEST"]);
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("user-token");
+    axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      url: "/api/getTasks",
+      method: "GET"
+    }).then(function (resp) {
+      console.log(resp);
+      commit(_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_SUCCESS"], resp);
+      resolve(resp);
+    })["catch"](function (err) {
+      console.log(err.response);
+      commit(_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_ERROR"], err);
+      reject(err);
+    });
+  });
+});
+
+var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_REQUEST"], function (state) {
+  state.tasks = '';
+}), _defineProperty(_mutations, _actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_SUCCESS"], function (state, resp) {
+  state.tasks = resp.data.message;
+}), _defineProperty(_mutations, _actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_ERROR"], function (state) {
+  state.tasks = '';
+}), _defineProperty(_mutations, _actions_userGetTasks__WEBPACK_IMPORTED_MODULE_0__["USER_TASK_SORT_DATE"], function (state, sortKey) {
+  var sort = state.tasks;
+  sort = _.orderBy(sort, sortKey, state.lastOrder);
+  state.tasks = sort;
+
+  if (state.lastOrder === 'asc') {
+    state.lastOrder = 'desc';
+  } else {
+    state.lastOrder = 'asc';
+  }
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: state,
@@ -82239,6 +82446,8 @@ var ifNotAuthenticated = function ifNotAuthenticated(to, from, next) {
 };
 
 var ifAuthenticated = function ifAuthenticated(to, from, next) {
+  console.log(_components_store__WEBPACK_IMPORTED_MODULE_2__["default"].getters.isAdmin);
+
   if (_components_store__WEBPACK_IMPORTED_MODULE_2__["default"].getters.isAuthenticated && _components_store__WEBPACK_IMPORTED_MODULE_2__["default"].getters.isAdmin) {
     next("/admin");
     return;

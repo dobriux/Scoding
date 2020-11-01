@@ -90,6 +90,7 @@ export default {
             if (!this.$v.$invalid) {
                 const { email, password } = this;
                 this.$store.dispatch(AUTH_REQUEST, { email, password }).then(() => {
+                    console.log(this.$store.getters.isAdmin);
                     if(this.$store.getters.isAdmin){
                         this.$router.push('/admin');
                     }else{

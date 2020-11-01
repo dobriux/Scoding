@@ -135,7 +135,7 @@ class AdminController extends Controller
        $task = new Tasks([
             'task' => $request->task,
             'user_id' => $request->id,
-            'status' => "in progress",
+            'status' => "to do",
            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
 
