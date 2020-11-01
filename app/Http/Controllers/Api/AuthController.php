@@ -27,7 +27,8 @@ class AuthController extends Controller
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'is_admin' => true
         ]);
         $user->save();
         return response()->json(['message' => 'Successfully created user!'], 201);
@@ -49,15 +50,22 @@ class AuthController extends Controller
             return response()->json(['message' => ['Email or password is incorrect']], 401);
 
         $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
+        $tokenResult = $user->createToken('UserToken');
         $token = $tokenResult->token;
         $token->save();
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
+            'isAdmin' => 1,
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
             )->toDateTimeString()
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+        return response()->json(['message' => ['Successfully logged out'], 200]);
     }
 }

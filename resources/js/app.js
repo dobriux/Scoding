@@ -19,6 +19,10 @@ Vue.use(Vuelidate);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+import moment from 'moment';
+
+Vue.prototype.moment = moment;
+
 const app = new Vue({
     el: '#app',
     router,

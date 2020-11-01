@@ -10,21 +10,22 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul v-if="!isAuthenticated" class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
+                            <router-link class="nav-link" to="/Login">Login</router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/register">Register</a>
+                            <router-link class="nav-link" to="/Register">Register</router-link>
                         </li>
                     </ul>
+                    <ul v-if="isAuthenticated" class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                                <a @click="logout" href="#" class="nav-link">Logout</a>
+                        </li>
+                    </ul>
+
                 </div>
             </div>
         </nav>
@@ -33,7 +34,17 @@
 </template>
 
 <script>
+import { AUTH_LOGOUT } from "../store/actions/auth";
+import { mapGetters } from "vuex";
 export default {
-    name: "layout"
+    name: "Layout",
+    methods: {
+        logout: function() {
+            this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push("/login"));
+        }
+    },
+    computed: {
+        ...mapGetters(["isAuthenticated"]),
+    }
 };
 </script>

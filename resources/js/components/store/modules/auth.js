@@ -6,20 +6,23 @@ import {
     AUTH_LOGOUT
 } from "../actions/auth";
 import { USER_REQUEST } from "../actions/user";
-import axios from "axios";
+import axios from "../../helpers/axios";
 
 const state = {
     token: localStorage.getItem("user-token") || "",
     hasLoadedOnce: false,
     error: '',
     loginHasErrors: false,
+    isAdmin:false,
+
 
 };
 
 const getters = {
     isAuthenticated: state => !!state.token,
     loginErrorMessage: state => state.error,
-    loginHasErrors: state => state.loginHasErrors
+    loginHasErrors: state => state.loginHasErrors,
+    isAdmin: state => state.isAdmin,
 };
 
 const actions = {
@@ -28,8 +31,8 @@ const actions = {
             commit(AUTH_REQUEST);
             axios({ url: "/api/login", data: user, method: "POST" })
                 .then(resp => {
+                    console.log(resp.data.access_token);
                     localStorage.setItem("user-token", resp.data.access_token);
-                    axios.defaults.headers.common['Authorization'] = resp.data.access_token
                     commit(AUTH_SUCCESS, resp);
                     dispatch(USER_REQUEST);
                     resolve(resp);
@@ -58,6 +61,7 @@ const mutations = {
         state.token = resp.data.access_token;
         state.hasLoadedOnce = true;
         state.loginHasErrors = false;
+        state.isAdmin = resp.data.isAdmin;
     },
     [AUTH_ERROR]: (state, resp) => {
         state.hasLoadedOnce = true;
