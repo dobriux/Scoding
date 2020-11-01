@@ -10,6 +10,7 @@ import adminEdit from "./modules/adminEdit";
 import adminUserTasks from "./modules/adminUserTasks";
 import adminAddTask from "./modules/adminAddTask";
 import userGetTasks from "./modules/userGetTasks";
+import userChangeStatus from "./modules/userChangeStatus";
 import * as Cookies from 'js-cookie';
 import createPersistedState from 'vuex-persistedstate';
 import { Store } from 'vuex'
@@ -28,7 +29,8 @@ export default new Store({
         adminDeleteUser,
         adminUserTasks,
         adminAddTask,
-        userGetTasks
+        userGetTasks,
+        userChangeStatus
     },
     plugins: [createPersistedState(
         {

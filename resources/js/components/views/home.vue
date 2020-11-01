@@ -16,7 +16,13 @@
                             <tbody>
                             <tr v-for="item in getTasks" :key="item.created_at">
                                 <td>{{item.task}}</td>
-                                <td>{{item.status}}</td>
+                                <td>
+                                    <select class="form-control" @change="statusChange($event, item.id)" >
+                                        <option value="1" :selected="item.status == 'in progress'">in progress</option>
+                                        <option value="2"  :selected="item.status == 'to do'">to do</option>
+                                        <option value="3"  :selected="item.status == 'done'">done</option>
+                                </select>
+                                </td>
                                 <td>{{moment(item.created_at).format('YYYY-MM-DD')}}</td>
                             </tr>
                             </tbody>
@@ -31,6 +37,9 @@
 <script>
 import {mapGetters} from "vuex";
 import {USER_TASK_REQUEST, USER_TASK_SORT_DATE} from "../store/actions/userGetTasks";
+import {ADMIN_ADD_TASK_REQUEST} from "../store/actions/adminAddTask";
+import {ADMIN_TASK_REQUEST} from "../store/actions/adminUserTasks";
+import {USER_CHANGE_STATUS_REQUEST} from "../store/actions/userChangeStatus";
 export default {
     name: "Home",
     computed: {
@@ -43,6 +52,10 @@ export default {
         this.$store.dispatch(USER_TASK_REQUEST);
     },
     methods: {
+        statusChange(event, id){
+            const status = event.target.value;
+            this.$store.dispatch(USER_CHANGE_STATUS_REQUEST,{id, status});
+        },
         sortBy: function(sortKey) {
             this.$store.commit(USER_TASK_SORT_DATE, sortKey);
         }

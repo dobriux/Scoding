@@ -20,4 +20,28 @@ class UserController extends Controller
 
         return response()->json(['message' => $tasks, 200]);
     }
+
+    public function changeStatus(Request $request){
+        $user = $request->user();
+        $task = Tasks::find($request->id);
+
+        if($user->id === $task->user_id)
+        {
+            switch ($request->status) {
+                case 1:
+                    $task->status = 'in progress';
+                    break;
+                case 2:
+                    $task->status = 'to do';
+                    break;
+                case 3:
+                    $task->status = 'done';
+                    break;
+            }
+            $task->save();
+            return response()->json(['message' => 'Task has been saved!', 200]);
+        }
+
+        return response()->json(['message' => 'Something went wrong', 404]);
+    }
 }

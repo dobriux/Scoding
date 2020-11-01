@@ -2456,6 +2456,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _store_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/actions/userGetTasks */ "./resources/js/components/store/actions/userGetTasks.js");
+/* harmony import */ var _store_actions_adminAddTask__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/actions/adminAddTask */ "./resources/js/components/store/actions/adminAddTask.js");
+/* harmony import */ var _store_actions_adminUserTasks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/actions/adminUserTasks */ "./resources/js/components/store/actions/adminUserTasks.js");
+/* harmony import */ var _store_actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../store/actions/userChangeStatus */ "./resources/js/components/store/actions/userChangeStatus.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2492,6 +2495,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2501,6 +2513,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.$store.dispatch(_store_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_1__["USER_TASK_REQUEST"]);
   },
   methods: {
+    statusChange: function statusChange(event, id) {
+      var status = event.target.value;
+      this.$store.dispatch(_store_actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_4__["USER_CHANGE_STATUS_REQUEST"], {
+        id: id,
+        status: status
+      });
+    },
     sortBy: function sortBy(sortKey) {
       this.$store.commit(_store_actions_userGetTasks__WEBPACK_IMPORTED_MODULE_1__["USER_TASK_SORT_DATE"], sortKey);
     }
@@ -61693,7 +61712,49 @@ var render = function() {
                   return _c("tr", { key: item.created_at }, [
                     _c("td", [_vm._v(_vm._s(item.task))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(item.status))]),
+                    _c("td", [
+                      _c(
+                        "select",
+                        {
+                          staticClass: "form-control",
+                          on: {
+                            change: function($event) {
+                              return _vm.statusChange($event, item.id)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "1" },
+                              domProps: {
+                                selected: item.status == "in progress"
+                              }
+                            },
+                            [_vm._v("in progress")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "2" },
+                              domProps: { selected: item.status == "to do" }
+                            },
+                            [_vm._v("to do")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "option",
+                            {
+                              attrs: { value: "3" },
+                              domProps: { selected: item.status == "done" }
+                            },
+                            [_vm._v("done")]
+                          )
+                        ]
+                      )
+                    ]),
                     _vm._v(" "),
                     _c("td", [
                       _vm._v(
@@ -81281,6 +81342,24 @@ var USER_ERROR = "USER_ERROR";
 
 /***/ }),
 
+/***/ "./resources/js/components/store/actions/userChangeStatus.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/store/actions/userChangeStatus.js ***!
+  \*******************************************************************/
+/*! exports provided: USER_CHANGE_STATUS_REQUEST, USER_CHANGE_STATUS_SUCCESS, USER_CHANGE_STATUS_ERROR */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_CHANGE_STATUS_REQUEST", function() { return USER_CHANGE_STATUS_REQUEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_CHANGE_STATUS_SUCCESS", function() { return USER_CHANGE_STATUS_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "USER_CHANGE_STATUS_ERROR", function() { return USER_CHANGE_STATUS_ERROR; });
+var USER_CHANGE_STATUS_REQUEST = "USER_CHANGE_STATUS_REQUEST";
+var USER_CHANGE_STATUS_SUCCESS = "USER_CHANGE_STATUS_SUCCESS";
+var USER_CHANGE_STATUS_ERROR = "USER_CHANGE_STATUS_ERROR";
+
+/***/ }),
+
 /***/ "./resources/js/components/store/actions/userGetTasks.js":
 /*!***************************************************************!*\
   !*** ./resources/js/components/store/actions/userGetTasks.js ***!
@@ -81323,9 +81402,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_adminUserTasks__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/adminUserTasks */ "./resources/js/components/store/modules/adminUserTasks.js");
 /* harmony import */ var _modules_adminAddTask__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/adminAddTask */ "./resources/js/components/store/modules/adminAddTask.js");
 /* harmony import */ var _modules_userGetTasks__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./modules/userGetTasks */ "./resources/js/components/store/modules/userGetTasks.js");
-/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");
-/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var vuex_persistedstate__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vuex-persistedstate */ "./node_modules/vuex-persistedstate/dist/vuex-persistedstate.es.js");
+/* harmony import */ var _modules_userChangeStatus__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/userChangeStatus */ "./resources/js/components/store/modules/userChangeStatus.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! js-cookie */ "./node_modules/js-cookie/src/js.cookie.js");
+/* harmony import */ var js_cookie__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(js_cookie__WEBPACK_IMPORTED_MODULE_13__);
+/* harmony import */ var vuex_persistedstate__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vuex-persistedstate */ "./node_modules/vuex-persistedstate/dist/vuex-persistedstate.es.js");
+
 
 
 
@@ -81354,22 +81435,23 @@ var debug = "development" !== "production";
     adminDeleteUser: _modules_adminDeleteUser__WEBPACK_IMPORTED_MODULE_6__["default"],
     adminUserTasks: _modules_adminUserTasks__WEBPACK_IMPORTED_MODULE_9__["default"],
     adminAddTask: _modules_adminAddTask__WEBPACK_IMPORTED_MODULE_10__["default"],
-    userGetTasks: _modules_userGetTasks__WEBPACK_IMPORTED_MODULE_11__["default"]
+    userGetTasks: _modules_userGetTasks__WEBPACK_IMPORTED_MODULE_11__["default"],
+    userChangeStatus: _modules_userChangeStatus__WEBPACK_IMPORTED_MODULE_12__["default"]
   },
-  plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_13__["default"])({
+  plugins: [Object(vuex_persistedstate__WEBPACK_IMPORTED_MODULE_14__["default"])({
     paths: ['auth.isAdmin', 'user.profile'],
     storage: {
       getItem: function getItem(key) {
-        return js_cookie__WEBPACK_IMPORTED_MODULE_12__["get"](key);
+        return js_cookie__WEBPACK_IMPORTED_MODULE_13__["get"](key);
       },
       setItem: function setItem(key, value) {
-        return js_cookie__WEBPACK_IMPORTED_MODULE_12__["set"](key, value, {
+        return js_cookie__WEBPACK_IMPORTED_MODULE_13__["set"](key, value, {
           expires: 3,
           secure: false
         });
       },
       removeItem: function removeItem(key) {
-        return js_cookie__WEBPACK_IMPORTED_MODULE_12__["remove"](key);
+        return js_cookie__WEBPACK_IMPORTED_MODULE_13__["remove"](key);
       }
     }
   })],
@@ -82047,6 +82129,70 @@ var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_user__WEB
   state.status = "error";
 }), _defineProperty(_mutations, _actions_auth__WEBPACK_IMPORTED_MODULE_2__["AUTH_LOGOUT"], function (state) {
   state.profile = {};
+}), _mutations);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/components/store/modules/userChangeStatus.js":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/store/modules/userChangeStatus.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/userChangeStatus */ "./resources/js/components/store/actions/userChangeStatus.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+var _mutations;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+var state = {
+  response: ''
+};
+var getters = {
+  statusChangeResponse: function statusChangeResponse(state) {
+    return state.response;
+  }
+};
+
+var actions = _defineProperty({}, _actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_REQUEST"], function (_ref, data) {
+  var commit = _ref.commit,
+      dispatch = _ref.dispatch;
+  return new Promise(function (resolve, reject) {
+    commit(_actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_REQUEST"]);
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem("user-token");
+    axios__WEBPACK_IMPORTED_MODULE_1___default()({
+      url: "/api/changeStatus",
+      data: data,
+      method: "POST"
+    }).then(function (resp) {
+      commit(_actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_SUCCESS"], resp);
+      resolve(resp);
+    })["catch"](function (err) {
+      console.log(err.response);
+      commit(_actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_ERROR"]);
+      reject(err);
+    });
+  });
+});
+
+var mutations = (_mutations = {}, _defineProperty(_mutations, _actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_REQUEST"], function (state) {
+  state.response = '';
+}), _defineProperty(_mutations, _actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_SUCCESS"], function (state, resp) {
+  state.response = resp.data.message;
+}), _defineProperty(_mutations, _actions_userChangeStatus__WEBPACK_IMPORTED_MODULE_0__["USER_CHANGE_STATUS_ERROR"], function (state) {
+  state.response = '';
 }), _mutations);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: state,
