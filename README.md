@@ -33,5 +33,11 @@ yarn run production
 
 Install passport api keys:
 ```
+php artisan migrate
+```
+
+
+Install passport api keys:
+```
 php artisan passport:install
 ```
