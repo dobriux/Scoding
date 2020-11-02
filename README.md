@@ -31,7 +31,7 @@ Compile js files:
 yarn run production
 ```
 
-Install passport api keys:
+Create tables in database:
 ```
 php artisan migrate
 ```
