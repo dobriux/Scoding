@@ -15,18 +15,18 @@ class UserController extends Controller
 
     public function getTasks(Request $request)
     {
-            $user = $request->user();
-            $tasks = Tasks::where('user_id', $user->id)->get();
+        $user = $request->user();
+        $tasks = Tasks::where('user_id', $user->id)->get();
 
         return response()->json(['message' => $tasks, 200]);
     }
 
-    public function changeStatus(Request $request){
+    public function changeStatus(Request $request)
+    {
         $user = $request->user();
         $task = Tasks::find($request->id);
 
-        if($user->id === $task->user_id)
-        {
+        if ($user->id === $task->user_id) {
             switch ($request->status) {
                 case 1:
                     $task->status = 'in progress';
