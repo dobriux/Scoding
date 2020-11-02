@@ -3,7 +3,6 @@
 
 namespace App\Http\Services;
 
-
 use App\Models\User;
 use App\Models\UsersRelationships;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +15,7 @@ class AdminService
         $usersR = UsersRelationships::where('admin_id', Auth::id())->get();
 
         $usersId = [];
-        foreach ($usersR as $item){
+        foreach ($usersR as $item) {
             $usersId[] = $item->user_id;
         }
 
@@ -26,22 +25,21 @@ class AdminService
     public function belongsToAdmin(int  $userId) : bool
     {
         $users = $this->getAdminsUsers();
-        if(in_array($userId,$users)){
+        if (in_array($userId, $users)) {
             return true;
         }
         return false;
     }
 
-    public function editUser(int $id,String $name, String $email,?String $password) : bool
+    public function editUser(int $id, String $name, String $email, ?String $password) : bool
     {
-
         $user = User::find($id);
         $user->name = $name;
         $user->email = $email;
-        if(!empty($password)){
+        if (!empty($password)) {
             $user->password = bcrypt($password);
         }
-        if($user->save()){
+        if ($user->save()) {
             return true;
         }
         return false;
@@ -50,7 +48,7 @@ class AdminService
     public function emailsBelongsToUser(int $id, string $email): bool
     {
         $user = User::find($id);
-        if($user->email === $email){
+        if ($user->email === $email) {
             return true;
         }
         return false;
