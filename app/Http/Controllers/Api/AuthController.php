@@ -20,8 +20,9 @@ class AuthController extends Controller
         ]);
 
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
+        }
 
 
         $user = new User([
@@ -41,13 +42,15 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
+        }
 
 
         $credentials = request(['email', 'password']);
-        if(!Auth::attempt($credentials))
+        if (!Auth::attempt($credentials)) {
             return response()->json(['message' => ['Email or password is incorrect']], 401);
+        }
 
         $user = $request->user();
         $tokenResult = $user->createToken('UserToken');

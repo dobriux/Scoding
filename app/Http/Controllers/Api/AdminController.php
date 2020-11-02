@@ -23,8 +23,9 @@ class AdminController extends Controller
         ]);
 
 
-        if ($validator->fails())
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->all()], 400);
+        }
 
 
         $user = new User([
@@ -53,43 +54,37 @@ class AdminController extends Controller
 
     public function editUser(Request $request, AdminService $adminService)
     {
-
-        if (!$adminService->belongsToAdmin($request->id))
-        {
+        if (!$adminService->belongsToAdmin($request->id)) {
             return response()->json(['message' => 'This user does not belong to you'], 404);
         }
 
-        if(!$adminService->emailsBelongsToUser($request->id, $request->email)) {
-
+        if (!$adminService->emailsBelongsToUser($request->id, $request->email)) {
             $name = Validator::make($request->all(), [
                 'name' => 'required|string|max:50|min:3',
                 'email' => 'required|string|email|unique:users',
             ]);
-        }else{
+        } else {
             $name = Validator::make($request->all(), [
                 'name' => 'required|string|max:50|min:3',
             ]);
         }
 
-        if ($name->fails())
-        {
+        if ($name->fails()) {
             return response()->json(['message' => $name->errors()->all()], 400);
         }
 
-        if(!empty($request->get('password')))
-        {
+        if (!empty($request->get('password'))) {
             $password = Validator::make($request->all(), [
                 'password' => 'required|string|min:6'
             ]);
 
-            if ($password->fails())
-            {
+            if ($password->fails()) {
                 return response()->json(['message' => $password->errors()->all()], 400);
             }
         }
 
 
-        if ($adminService->editUser($request->id, $request->name, $request->email, $request->password)){
+        if ($adminService->editUser($request->id, $request->name, $request->email, $request->password)) {
             return response()->json(['message' => 'User edited successfully!'], 200);
         }
 
@@ -99,8 +94,7 @@ class AdminController extends Controller
 
     public function deleteUser(Request $request, AdminService $adminService)
     {
-        if (!$adminService->belongsToAdmin($request->id))
-        {
+        if (!$adminService->belongsToAdmin($request->id)) {
             return response()->json(['message' => 'This user does not belong to you'], 404);
         }
 
@@ -115,8 +109,7 @@ class AdminController extends Controller
 
     public function getTasks(Request $request, AdminService $adminService)
     {
-        if (!$adminService->belongsToAdmin($request->id))
-        {
+        if (!$adminService->belongsToAdmin($request->id)) {
             return response()->json(['message' => 'This user does not belong to you'], 404);
         }
 
@@ -127,24 +120,21 @@ class AdminController extends Controller
 
     public function addTask(Request $request, AdminService $adminService)
     {
-        if (!$adminService->belongsToAdmin($request->id))
-        {
+        if (!$adminService->belongsToAdmin($request->id)) {
             return response()->json(['message' => 'This user does not belong to you'], 404);
         }
 
-       $task = new Tasks([
+        $task = new Tasks([
             'task' => $request->task,
             'user_id' => $request->id,
             'status' => "to do",
            'created_at' => Carbon::now()->toDateTimeString(),
         ]);
 
-       if($task->save()){
-           return response()->json(['message' => 'Task successfully saved'], 200);
-       }
+        if ($task->save()) {
+            return response()->json(['message' => 'Task successfully saved'], 200);
+        }
 
         return response()->json(['message' => ['Something went wrong']], 404);
     }
-
-
 }
