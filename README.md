@@ -36,6 +36,10 @@ Create tables in database:
 php artisan migrate
 ```
 
+Generate key:
+```
+php artisan key:generate
+```
 
 Install passport api keys:
 ```
