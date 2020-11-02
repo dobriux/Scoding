@@ -31,7 +31,6 @@ const actions = {
             commit(AUTH_REQUEST);
             axios({ url: "/api/login", data: user, method: "POST" })
                 .then(resp => {
-                    console.log(resp.data);
                     localStorage.setItem("user-token", resp.data.access_token);
                     commit(AUTH_SUCCESS, resp);
                     dispatch(USER_REQUEST);
@@ -39,6 +38,9 @@ const actions = {
                 })
                 .catch(err => {
                     commit(AUTH_ERROR, err.response);
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     localStorage.removeItem("user-token");
                     reject(err);
                 });

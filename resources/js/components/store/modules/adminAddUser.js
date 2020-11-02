@@ -4,17 +4,16 @@ import {
     ADMIN_ADD_SUCCESS,
 } from "../actions/adminAddUser";
 import axios from "axios";
+import {AUTH_LOGOUT} from "../actions/auth";
 
 const state = {
     adminAddResponseMessage:'',
     adminAddErrorResponseMessage:'',
-    adminAddHasErrors:false,
 };
 
 const getters = {
     adminAddResponseMessage: state => state.adminAddResponseMessage,
     adminAddErrorResponseMessage: state => state.adminAddErrorResponseMessage,
-    adminAddHasErrors: state => state.adminAddHasErrors
 };
 
 const actions = {
@@ -24,11 +23,13 @@ const actions = {
             axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("user-token");
             axios({ url: "/api/admin/addUser", data: user, method: "POST" })
                 .then(resp => {
-                    console.log(resp)
                     commit(ADMIN_ADD_SUCCESS, resp);
                     resolve(resp);
                 })
                 .catch(err => {
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     commit(ADMIN_ADD_ERROR, err);
                     reject(err);
                 });
@@ -38,18 +39,16 @@ const actions = {
 
 const mutations = {
     [ADMIN_ADD_REQUEST]: state => {
-        state.adminAddHasErrors = false;
-        state.adminAddMessage = '';
+        state.adminAddResponseMessage = '';
         state.adminAddErrorResponseMessage = '';
         },
     [ADMIN_ADD_SUCCESS]: (state, resp) => {
-        state.adminAddHasErrors = false;
         state.adminAddErrorResponseMessage = '';
         state.adminAddResponseMessage = resp.data.message;
     },
     [ADMIN_ADD_ERROR]: (state, err) => {
-        state.adminAddHasErrors = true;
         state.adminAddErrorResponseMessage = err.response.data.message;
+        state.adminAddResponseMessage = '';
     }
 };
 

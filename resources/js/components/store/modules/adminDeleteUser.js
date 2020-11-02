@@ -5,6 +5,7 @@ import {
     ADMIN_DELETE_ID
 } from "../actions/adminDeleteUser";
 import axios from "axios";
+import {AUTH_LOGOUT} from "../actions/auth";
 
 const state = {
     admindDeleteResponseMessage:'',
@@ -26,12 +27,13 @@ const actions = {
             axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("user-token");
             axios({ url: "/api/admin/deleteUser", data: data, method: "DELETE" })
                 .then(resp => {
-                    console.log(resp)
                     commit(ADMIN_DELETE_SUCCESS, resp);
                     resolve(resp);
                 })
                 .catch(err => {
-                    console.log(err.response)
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     commit(ADMIN_DELETE_ERROR, err);
                     reject(err);
                 });

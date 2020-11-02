@@ -42,6 +42,6 @@ class UserController extends Controller
             return response()->json(['message' => 'Task has been saved!', 200]);
         }
 
-        return response()->json(['message' => 'Something went wrong', 404]);
+        return response()->json(['message' => 'Task does not belong to you', 404]);
     }
 }

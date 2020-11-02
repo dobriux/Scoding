@@ -5,6 +5,7 @@ import {
     USER_TASK_SORT_DATE
 } from "../actions/userGetTasks";
 import axios from "axios";
+import {AUTH_LOGOUT} from "../actions/auth";
 
 const state = {
     tasks:'',
@@ -22,12 +23,13 @@ const actions = {
             axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("user-token");
             axios({ url: "/api/getTasks", method: "GET" })
                 .then(resp => {
-                    console.log(resp);
                     commit(USER_TASK_SUCCESS, resp);
                     resolve(resp);
                 })
                 .catch(err => {
-                    console.log(err.response)
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     commit(USER_TASK_ERROR, err);
                     reject(err);
                 });

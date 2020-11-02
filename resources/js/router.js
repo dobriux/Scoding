@@ -19,7 +19,6 @@ const ifNotAuthenticated = (to, from, next) => {
 };
 
 const ifAuthenticated = (to, from, next) => {
-    console.log(store.getters.isAdmin);
     if(store.getters.isAuthenticated && store.getters.isAdmin){
         next("/admin");
         return;

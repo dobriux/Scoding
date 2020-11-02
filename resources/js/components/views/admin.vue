@@ -58,7 +58,7 @@
                                     </div>
                                     <form @submit.prevent="adminAdd">
                                     <div class="modal-body">
-                                        <div class="alert alert-danger" v-if="adminAddHasErrors" role="alert">
+                                        <div class="alert alert-danger" v-if="adminAddErrorResponseMessage!==''" role="alert">
                                             <ul>
                                                 <li v-for="item in adminAddErrorResponseMessage" :key="item">
                                                     {{ item }}
@@ -310,7 +310,7 @@ export default {
                     this.$v.register.email.$model = '';
                     this.$v.register.password.$model = '';
                     this.$v.register.password_confirmation.$model = '';
-                    this.$v.register.$reset();
+                    this.$v.$reset();
                 });
             }
         },
@@ -321,7 +321,7 @@ export default {
                 const id = this.adminEditSelectedUser.id;
                 this.$store.dispatch(ADMIN_EDIT_REQUEST, {id ,name, email, password }).then(() => {
                     this.$v.edit.password.$model = '';
-                    this.$v.edit.$reset();
+                    this.$v.$reset();
                     this.$store.dispatch(ADMIN_USERS_REQUEST);
                 });
             }

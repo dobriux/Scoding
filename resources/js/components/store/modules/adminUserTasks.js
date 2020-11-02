@@ -5,6 +5,7 @@ import {
     ADMIN_TASK_SELECTED_USER
 } from "../actions/adminUserTasks";
 import axios from "axios";
+import {AUTH_LOGOUT} from "../actions/auth";
 
 const state = {
     tasks:'',
@@ -23,12 +24,13 @@ const actions = {
             axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("user-token");
             axios({ url: "/api/admin/getUserTasks", data:data, method: "POST" })
                 .then(resp => {
-                    console.log(resp);
                     commit(ADMIN_TASK_SUCCESS, resp);
                     resolve(resp);
                 })
                 .catch(err => {
-                    console.log(err.response)
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     commit(ADMIN_TASK_ERROR, err);
                     reject(err);
                 });

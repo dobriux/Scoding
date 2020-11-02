@@ -19,7 +19,6 @@ const getters = {
 
 const actions = {
     [REGISTER_REQUEST]: ({ commit, dispatch }, user) => {
-        console.log(user);
         return new Promise((resolve, reject) => {
             commit(REGISTER_REQUEST);
             axios({ url: "/api/register", data: user, method: "POST" })

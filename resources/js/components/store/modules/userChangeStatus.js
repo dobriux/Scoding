@@ -4,6 +4,7 @@ import {
     USER_CHANGE_STATUS_SUCCESS,
 } from "../actions/userChangeStatus";
 import axios from "axios";
+import {AUTH_LOGOUT} from "../actions/auth";
 
 const state = {
     response:'',
@@ -24,7 +25,9 @@ const actions = {
                     resolve(resp);
                 })
                 .catch(err => {
-                    console.log(err.response)
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     commit(USER_CHANGE_STATUS_ERROR);
                     reject(err);
                 });

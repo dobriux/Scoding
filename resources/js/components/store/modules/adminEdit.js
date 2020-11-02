@@ -5,6 +5,7 @@ import {
     ADMIN_EDIT_SELECT_USER
 } from "../actions/adminEdit";
 import axios from "axios";
+import {AUTH_LOGOUT} from "../actions/auth";
 
 const state = {
     adminEditResponseMessage:'',
@@ -25,12 +26,13 @@ const actions = {
             axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("user-token");
             axios({ url: "/api/admin/editUser", data: edit, method: "PUT" })
                 .then(resp => {
-                    console.log(resp)
                     commit(ADMIN_EDIT_SUCCESS, resp);
                     resolve(resp);
                 })
                 .catch(err => {
-                    console.log(err.response)
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     commit(ADMIN_EDIT_ERROR, err);
                     reject(err);
                 });

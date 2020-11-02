@@ -25,9 +25,10 @@ const actions = {
                     resolve(resp);
                 })
                 .catch(err => {
-                    console.log(err.response)
                     commit(ADMIN_USERS_ERROR, err);
-                    //dispatch(AUTH_LOGOUT);
+                    if(err.response.status === 401){
+                        dispatch(AUTH_LOGOUT);
+                    }
                     reject(err);
                 });
         });

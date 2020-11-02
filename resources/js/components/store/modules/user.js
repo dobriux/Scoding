@@ -20,10 +20,12 @@ const actions = {
         axios.defaults.headers.common['Authorization'] = 'Bearer '+localStorage.getItem("user-token");
         axios({ url: "api/getUser" })
             .then(resp => {
-                console.log(resp);
                 commit(USER_SUCCESS, resp);
             })
-            .catch(() => {
+            .catch(err => {
+                if(err.response.status === 401){
+                    dispatch(AUTH_LOGOUT);
+                }
                 commit(USER_ERROR);
                 dispatch(AUTH_LOGOUT);
             });
